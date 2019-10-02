@@ -53,9 +53,11 @@ fn main() {
     let json_resp: SearchResponse = client.get(url.as_str()).send().unwrap().json().unwrap();
 
     match json_resp.crates.iter().find(|&c| c.exact_match == true) {
+        // If there is a crate that is an exact match, just print that one
         Some(c) => {
             println!("{}", c);
         }
+        // otherwise print all of them!
         None => {
             json_resp.crates.iter().for_each(|c| println!("{}\n", c));
         }
@@ -78,6 +80,7 @@ impl fmt::Display for Crate {
 
         match DateTime::parse_from_rfc3339(&self.updated_at) {
             Ok(date) => {
+                // Append the date in a format of DD MM YYYY
                 write!(f, "{}\nLast Updated: {}", crate_and_version, date.format("%d %B %Y"))
             }
             Err(_) => {
